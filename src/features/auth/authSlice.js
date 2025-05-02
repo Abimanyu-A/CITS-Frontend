@@ -1,38 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../utils/api";
-
-// Thunk to get current user
-export const getCurrentUser = createAsyncThunk(
-    "auth/getCurrentUser",
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await api.get("/auth/me", { withCredentials: true });
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(
-                error?.response?.data?.message || "Failed to fetch user details"
-            );
-        }
-    }
-);
-
-// Thunk to login user and fetch current user
-export const loginUser = createAsyncThunk(
-    "auth/loginUser",
-    async (credentials, { dispatch, rejectWithValue }) => {
-        try {
-            await api.post("/auth/login", credentials, { withCredentials: true });
-
-            // Dispatch getCurrentUser and unwrap result
-            const user = await dispatch(getCurrentUser()).unwrap();
-            return user;
-        } catch (error) {
-            return rejectWithValue(
-                error?.response?.data?.message || error.message || "Failed to login user"
-            );
-        }
-    }
-);
+import { createSlice } from "@reduxjs/toolkit";
+import { loginUser, getCurrentUser } from "./authThunk";
+import api from "../../utils/api";
 
 // Auth slice
 const authSlice = createSlice({
@@ -41,8 +9,28 @@ const authSlice = createSlice({
         user: null,
         status: "idle",
         error: null,
+        lastActivity: Date.now(),
+        firstLogin: null,
     },
-    reducers: {},
+    reducers: {
+      logout(state) {
+        state.user = null;
+        state.status = "idle";
+        state.error = null;
+      },
+
+      updateSessionActivity(state) {
+        state.lastActivity = Date.now();
+      },
+
+      resetError(state) {
+        state.error = null;
+      },
+
+      setFirstLogin(state) {
+        state.firstLogin = false;
+      }
+    },
     extraReducers: (builder) => {
         builder
             // loginUser
@@ -53,6 +41,7 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.user = action.payload;
+                state.firstLogin = action.payload.data.firstLogin;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = "failed";
@@ -75,4 +64,15 @@ const authSlice = createSlice({
     },
 });
 
+
+export const logoutUser = () => async (dispatch) => {
+  try {
+    await api.post("/auth/logout", {}, { withCredentials: true });
+    dispatch(logout());
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};
+
+export const { logout, updateSessionActivity, resetError, setFirstLogin } = authSlice.actions;
 export default authSlice.reducer;

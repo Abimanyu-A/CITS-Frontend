@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { FiLock, FiMail, FiLogIn } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/authSlice";
+import { loginUser } from "../../features/auth/authThunk";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,9 +22,9 @@ export default function LoginPage() {
     }
   }, [user, navigate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    dispatch(loginUser(credentials));
+    await dispatch(loginUser(credentials));
   };
 
   return (

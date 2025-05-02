@@ -1,19 +1,22 @@
-import { useState } from 'react'
 import './App.css'
 import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
+import LoginPage from './pages/auth/LoginPage';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from './pages/Dashboard'
-
+import Dashboard from './pages/dashboard/Dashboard';
+import ProtectedRoute from './components/layout/ProtectedRoute';
+import ProfileUpdatePage from './pages/profile/ProfileUpdatePage';
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <Router>
       <Routes>
         <Route path='/' element = {<LandingPage/>}/>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        
+        <Route element={<ProtectedRoute />} >
+          <Route path="/profile-update" element={<ProfileUpdatePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </Router>
   )
