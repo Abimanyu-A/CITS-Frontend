@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import FeatureCard from "../components/FeatureCard";
+import FeatureCard from "../components/ui/FeatureCard";
 import { FiArrowRight, FiShield, FiTrendingUp, FiZap, FiMenu, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/ui/Navbar";
 
 export default function LandingPage() {
   const navigate = useNavigate();

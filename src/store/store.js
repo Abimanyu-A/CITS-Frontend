@@ -1,6 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import empReducer from "../features/emp/empSlice";
+import teamReducer from "../features/team/teamSlice"
+import deptReducer from "../features/dept/deptSlice"
 
 import {
   persistStore,
@@ -18,13 +20,15 @@ import storage from "redux-persist/lib/storage";
 const rootReducer = combineReducers({
   auth: authReducer,
   emp: empReducer,
+  team: teamReducer,
+  dept: deptReducer,
 });
 
 // Persist config
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth","emp"], 
+  whitelist: ["auth","emp","team","dept"], 
 };
 
 // Create persisted reducer

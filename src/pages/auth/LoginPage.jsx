@@ -1,17 +1,17 @@
 import { motion } from "framer-motion";
-import { FiLock, FiMail, FiLogIn } from "react-icons/fi";
+import { FiLock, FiUser, FiLogIn } from "react-icons/fi"; // Switched from FiMail to FiUser
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/auth/authThunk";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAllEmployees } from "../../features/emp/empThunk";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
   const { user, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -22,9 +22,11 @@ export default function LoginPage() {
     }
   }, [user, navigate]);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(loginUser(credentials));
+      dispatch(getAllEmployees());
+    
   };
 
   return (
@@ -36,27 +38,22 @@ export default function LoginPage() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-10">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="inline-block mb-6"
-          >
+          <motion.div whileHover={{ scale: 1.05 }} className="inline-block mb-6">
             <div className="bg-primary/20 rounded-full p-4">
               <FiLock className="text-primary w-8 h-8" />
             </div>
           </motion.div>
-          
+
           <h1 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
             Welcome <span className="text-primary">Back</span>
           </h1>
-          
-          <p className="text-gray-300">
-            Sign in to your company dashboard
-          </p>
+
+          <p className="text-gray-300">Sign in to your company dashboard</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="bg-error/20 text-error px-4 py-3 rounded-lg"
@@ -67,23 +64,22 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address
+              <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+                Username
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                  <FiMail className="text-gray-400" />
+                  <FiUser className="text-gray-400" />
                 </div>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="username"
+                  name="username"
+                  type="text"
                   required
-                  value={credentials.email}
-                  onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+                  value={credentials.username}
+                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                   className="bg-base-100/50 border border-base-100 text-white placeholder-gray-400 rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-3 backdrop-blur-sm"
-                  placeholder="your@email.com"
+                  placeholder="username"
                 />
               </div>
             </div>
@@ -103,7 +99,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   required
                   value={credentials.password}
-                  onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                   className="bg-base-100/50 border border-base-100 text-white placeholder-gray-400 rounded-lg focus:ring-primary focus:border-primary block w-full pl-10 p-3 backdrop-blur-sm"
                   placeholder="••••••••"
                 />
@@ -112,7 +108,6 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center justify-between">
-
             <div className="text-sm">
               <a href="#" className="font-medium text-primary hover:text-primary/80">
                 Forgot password?
@@ -138,9 +133,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-600"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-base-200 text-gray-400">
-                New to our platform?
-              </span>
+              <span className="px-2 bg-base-200 text-gray-400">New to our platform?</span>
             </div>
           </div>
 

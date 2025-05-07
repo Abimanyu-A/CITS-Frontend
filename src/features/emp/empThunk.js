@@ -6,7 +6,6 @@ export const getCurrentEmployee = createAsyncThunk(
     async ({ userId }, { rejectWithValue }) => {
       try {
         const response = await api.get(`/emp/get-employee/${userId}`, { withCredentials: true});
-        console.log(response)
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data?.message || "Failed to fetch current employee");
@@ -21,8 +20,7 @@ export const updateEmployeeProfile = createAsyncThunk(
     try {
       // Create a FormData instance to handle both text and files
       const formData = new FormData();
-      console.log(updates)
-      console.log(employeeId)
+      
 
       // Append text data
       Object.keys(updates).forEach((key) => {
@@ -59,6 +57,32 @@ export const updateEmployeeProfile = createAsyncThunk(
       return response.data; 
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Failed to update profile");
+    }
+  }
+);
+
+export const getAllEmployees = createAsyncThunk(
+  "emp/getAllEmployees",
+  async(_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/emp/all-employees', { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to get all employees");
+    }
+  }
+);
+
+export const deleteEmployee = createAsyncThunk(
+  "emp/deleteEmployee",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/emp/delete-employee/${id}`, { 
+        withCredentials: true 
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to delete employee");
     }
   }
 );

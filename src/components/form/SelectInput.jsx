@@ -1,21 +1,16 @@
 import PropTypes from 'prop-types';
 
-const TextInput = ({
+const SelectInput = ({
   label,
   name,
   value,
   onChange,
+  options,
   error,
   required = false,
-  type = 'text',
-  placeholder = '',
-  textarea = false,
-  rows = 3,
   icon,
   className = '',
 }) => {
-  const InputComponent = textarea ? 'textarea' : 'input';
-
   return (
     <div className={`space-y-1 ${className}`}>
       <label htmlFor={name} className="block text-sm font-medium">
@@ -28,16 +23,19 @@ const TextInput = ({
             {icon}
           </div>
         )}
-        <InputComponent
-          type={type}
+        <select
           id={name}
           name={name}
           value={value}
           onChange={onChange}
-          placeholder={placeholder}
-          rows={textarea ? rows : undefined}
-          className={`block w-full ${icon ? 'pl-10' : 'pl-2'} pr-3 py-2 border ${error ? 'border-error' : 'border-base-300'} rounded-lg text-primary shadow-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-base-200`}
-        />
+          className={`block w-full ${icon ? 'pl-10' : ''} pr-3 py-2 border ${error ? 'border-error' : 'border-base-300'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-base-200 appearance-none`}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
       
       {error && (
@@ -47,19 +45,21 @@ const TextInput = ({
   );
 };
 
-TextInput.propTypes = {
+SelectInput.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   error: PropTypes.string,
   required: PropTypes.bool,
-  type: PropTypes.string,
-  placeholder: PropTypes.string,
-  textarea: PropTypes.bool,
-  rows: PropTypes.number,
   icon: PropTypes.node,
   className: PropTypes.string,
 };
 
-export default TextInput;
+export default SelectInput;

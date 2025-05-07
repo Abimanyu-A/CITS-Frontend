@@ -1,11 +1,17 @@
 import { motion } from "framer-motion";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ImageUpload({ currentImage, onChange }) {
-  const [preview, setPreview] = useState(
-    typeof currentImage === "string" ? currentImage : ''
-  );
+  const [preview, setPreview] = useState('');
+
+  useEffect(() => {
+    if (typeof currentImage === "string") {
+      setPreview(currentImage);
+    } else if (!currentImage) {
+      setPreview('');
+    }
+  }, [currentImage]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

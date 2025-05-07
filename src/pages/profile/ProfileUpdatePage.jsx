@@ -15,6 +15,7 @@ import SkillsInput from "../../components/form/SkillsInput";
 import DocumentUpload from "../../components/form/DocumentUpload";
 import ImageUpload from "../../components/form/ImageUpload";
 import { toast } from "react-toastify";
+import LoadingPage from "../../components/layout/LoadingPage";
 
 export default function ProfileUpdatePage() {
   const dispatch = useDispatch();
@@ -52,7 +53,6 @@ export default function ProfileUpdatePage() {
       if (!employee) {
         navigate("/login");
       } else {
-        console.log(employee)
         setFormData({
           firstName: employee.firstName || '',
           lastName: employee.lastName || '',
@@ -74,8 +74,10 @@ export default function ProfileUpdatePage() {
           documents: employee.documents || [],
           photo: employee.photo || ''
         });
+        
       }
     }
+    
   }, [employee, empStatus, authStatus, navigate]);
 
   const handleSubmit = async (e) => {
@@ -103,7 +105,11 @@ export default function ProfileUpdatePage() {
     empStatus === "loading" &&
     firstLogin === null
   ) {
-    return <p className="text-center text-white mt-10">Loading...</p>;
+    return <LoadingPage />;
+  }
+
+  if(loading){
+    return <LoadingPage/>
   }
 
   return (
