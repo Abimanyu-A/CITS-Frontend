@@ -11,18 +11,14 @@ export const getCurrentEmployee = createAsyncThunk(
         return rejectWithValue(error.response?.data?.message || "Failed to fetch current employee");
       }
     }
-  )
-  
+);
 
 export const updateEmployeeProfile = createAsyncThunk(
   "emp/updateProfile",
   async ({ employeeId, updates }, { rejectWithValue }) => {
     try {
-      // Create a FormData instance to handle both text and files
       const formData = new FormData();
       
-
-      // Append text data
       Object.keys(updates).forEach((key) => {
         if (
           updates[key] !== undefined &&
@@ -34,19 +30,16 @@ export const updateEmployeeProfile = createAsyncThunk(
         }
       });
       
-      // Append the photo file
       if (updates.photo) {
         formData.append("photo", updates.photo);
       }
       
-      // Append document files
       if (updates.documents && updates.documents.length > 0) {
         updates.documents.forEach((doc) => {
           formData.append("documents", doc);
         });
       }
 
-      // Send the request with the FormData object
       const response = await api.put(`/emp/update-profile/${employeeId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -83,6 +76,38 @@ export const deleteEmployee = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Failed to delete employee");
+    }
+  }
+);
+
+export const updateEmployeeDepartment = createAsyncThunk(
+  "emp/updateDepartment",
+  async ({ employeeId, newDept }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `/emp/update-dept/${employeeId}`,
+        { newDept },
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to update department");
+    }
+  }
+);
+
+export const updateEmployeeTeam = createAsyncThunk(
+  "emp/updateTeam",
+  async ({ employeeId, newTeam }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `/emp/update-team/${employeeId}`,
+        { newTeam },
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to update team");
     }
   }
 );

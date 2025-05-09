@@ -22,15 +22,18 @@ const TeamManagementPage = () => {
   const [teamToDelete, setTeamToDelete] = useState(null);
   const [teamToEdit, setTeamToEdit] = useState(null);
   const [newTeam, setNewTeam] = useState({
-    name: '',
+    teamName: '',
     description: '',
     teamLead: '',
     department: ''
   });
   const employees = useSelector((state) => state.emp.allEmployees.data);
+  const departments = useSelector((state) => state.dept.depts);
   const [errors, setErrors] = useState({
-    name: '',
-    description: ''
+    teamName: '',
+    description: '',
+    teamLead: '',
+    department: ''
   });
 
   useEffect(() => {
@@ -46,51 +49,59 @@ const TeamManagementPage = () => {
     }
   }, [error]);
 
-  const validateForm = () => {
+  const validateForm = (teamData) => {
     let valid = true;
-    const newErrors = { name: '', description: '' };
-
-    if (!newTeam.name.trim()) {
+    const newErrors = { name: '', description: '', teamLead: '', department: '' };
+  
+    if (!teamData.name.trim()) {
       newErrors.name = 'Team name is required';
       valid = false;
     }
-
-    if (!newTeam.description.trim()) {
+  
+    if (!teamData.description.trim()) {
       newErrors.description = 'Description is required';
       valid = false;
     }
-
+  
+    if (!teamData.teamLead) {
+      newErrors.teamLead = 'Team lead is required';
+      valid = false;
+    }
+  
+    if (!teamData.department) {
+      newErrors.department = 'Department is required';
+      valid = false;
+    }
+  
     setErrors(newErrors);
     return valid;
   };
 
-  const handleCreateTeam = async (e) => {
+  const handleCreateTeam = async (e, formData) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
+    if (!validateForm(formData)) return;
+  
     try {
-      await dispatch(createTeam({ team: newTeam })).unwrap();
+      await dispatch(createTeam({ team: formData })).unwrap();
       toast.success('Team created successfully!');
       setIsCreateModalOpen(false);
-      setNewTeam({ name: '', description: '' });
       dispatch(resetTeams());
     } catch (error) {
       toast.error(error.message || 'Failed to create team');
     }
   };
-
-  const handleUpdateTeam = async (e) => {
+  
+  const handleUpdateTeam = async (e, formData) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
+    if (!validateForm(formData)) return;
+  
     try {
       await dispatch(updateTeam({ 
         teamId: teamToEdit._id, 
-        updates: { name: newTeam.name, description: newTeam.description }
+        updates: formData
       })).unwrap();
       toast.success('Team updated successfully!');
       setIsEditModalOpen(false);
-      setNewTeam({ name: '', description: '' });
       setTeamToEdit(null);
     } catch (error) {
       toast.error(error.message || 'Failed to update team');
@@ -114,8 +125,10 @@ const TeamManagementPage = () => {
   const openEditModal = (team) => {
     setTeamToEdit(team);
     setNewTeam({
-      name: team.name,
-      description: team.description
+      name: team.teamName,
+      description: team.description,
+      teamLead: team.teamLead,
+      department: team.department
     });
     setIsEditModalOpen(true);
   };
@@ -184,6 +197,7 @@ const TeamManagementPage = () => {
           team={newTeam}
           errors={errors}
           users={employees}
+          departments={departments}
           onSubmit={handleCreateTeam}
           onCancel={() => setIsCreateModalOpen(false)}
         />
@@ -195,7 +209,9 @@ const TeamManagementPage = () => {
         title={`Edit ${teamToEdit?.name}`}
       >
         <TeamForm
-          team={newTeam}
+          team={teamToEdit}
+          departments={departments}
+          users={employees}
           errors={errors}
           onSubmit={handleUpdateTeam}
           onCancel={() => setIsEditModalOpen(false)}

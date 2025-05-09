@@ -1,12 +1,12 @@
 import { useState } from "react";
 import TextInput from "../form/TextInput";
 import Button from "../element/Button";
-import { FiPlus, FiSave, FiUser, FiUsers } from "react-icons/fi";
+import { FiPlus, FiSave, FiTrendingUp, FiUser, FiUsers } from "react-icons/fi";
 import SelectInput from "../form/SelectInput";
 
 const TeamForm = ({
   team = { 
-    name: '', 
+    teamName: '', 
     description: '',
     teamLead: '',  // Will store user ID of the team lead
     department: ''
@@ -19,6 +19,7 @@ const TeamForm = ({
   isEditing = false
 }) => {
   const [formData, setFormData] = useState(team);
+  console.log(formData)
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -38,7 +39,7 @@ const TeamForm = ({
         <TextInput
           label="Team Name"
           name="name"
-          value={formData.name}
+          value={formData.teamName}
           onChange={(e) => handleChange('name', e.target.value)}
           error={errors.name}
           required
@@ -74,9 +75,10 @@ const TeamForm = ({
           name="department"
           value={formData.department}
           onChange={(e) => handleChange('department', e.target.value)}
-          options={departments}
+          options={departments.map(dept => ({value: dept._id, label: dept.DeptName}))}
           error={errors.department}
           required
+          icon={<FiTrendingUp className="text-gray-400" />}
         />
       </div>
       

@@ -1,9 +1,8 @@
-// components/team/TeamListItem.jsx
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import TeamActions from "./TeamActions";
 
-const TeamListItem = ({ team, isSelected, onSelect }) => {
+const TeamListItem = ({ team, isSelected, onSelect, onEdit, onDelete }) => {
   return (
     <motion.div
       whileHover={{ backgroundColor: 'rgba(30, 41, 59, 0.5)' }}
@@ -12,7 +11,7 @@ const TeamListItem = ({ team, isSelected, onSelect }) => {
     >
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="font-medium">{team.name}</h3>
+          <h3 className="font-medium">{team.teamName}</h3>
           <p className="text-sm text-gray-400 truncate">{team.description}</p>
         </div>
         {isSelected ? (
@@ -31,7 +30,7 @@ const TeamListItem = ({ team, isSelected, onSelect }) => {
             transition={{ duration: 0.2 }}
             className="mt-3 pt-3 border-t border-base-300"
           >
-            <TeamActions team={team} />
+            <TeamActions team={team} onEdit={onEdit} onDelete={onDelete} />
           </motion.div>
         )}
       </AnimatePresence>

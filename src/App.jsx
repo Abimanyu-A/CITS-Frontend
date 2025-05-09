@@ -10,6 +10,10 @@ import RegisterEmployeePage from './pages/employee/RegisterEmployeePage';
 import TeamManagementPage from './pages/team/TeamManagementPage';
 import EmployeeManagementPage from './pages/employee/EmployeeManagementPage';
 import DeptManagementPage from './pages/dept/DeptManagementPage';
+import PerformanceReviewPage from './pages/review/PerformanceReviewPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import AttendanceManagementPage from './pages/attendence/attendanceManagementPage';
+import EmployeeAttendancePage from './pages/attendence/EmployeeAttendancePage';
 
 
 function App() {
@@ -65,6 +69,38 @@ function App() {
             element={
               <DashboardLayout>
                 <DeptManagementPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/review"
+            element={
+              <DashboardLayout>
+                <PerformanceReviewPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <DashboardLayout>
+                <ProfilePage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/attendance-management"
+            element={
+              <DashboardLayout>
+                <AttendanceManagementPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/attendence"
+            element={
+              <DashboardLayout>
+                <EmployeeAttendancePage />
               </DashboardLayout>
             }
           />

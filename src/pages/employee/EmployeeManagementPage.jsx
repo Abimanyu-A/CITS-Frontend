@@ -1,11 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FiUser, FiPhone, FiMail, FiBriefcase, FiDollarSign, FiKey, 
-  FiEdit2, FiTrash2, FiPlus, FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { 
+  FiUser, FiPhone, FiMail, FiBriefcase, FiDollarSign, FiKey, 
+  FiEdit2, FiTrash2, FiPlus, FiSearch, FiChevronLeft, FiChevronRight,
+  FiUsers, FiFilter 
+} from "react-icons/fi";
 import { toast } from "react-toastify";
 import { 
   getAllEmployees, 
-  deleteEmployee 
+  deleteEmployee,
+  updateEmployeeDepartment,
+  updateEmployeeTeam
 } from "../../features/emp/empThunk";
 
 import EmployeeProfile from "./EmployeeProfile";
@@ -13,6 +18,7 @@ import EmployeeFormModal from "../../components/employees/EmployeeFormModal";
 import LoadingPage from "../../components/layout/LoadingPage";
 import Table from "../../components/layout/Table";
 import Pagination from "../../components/layout/Pagination";
+import AssignmentModal from "../../components/employees/AssignmentModal";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,12 +26,18 @@ export default function EmployeeManagementPage() {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.emp);
   const employees = useSelector((state) => state.emp.allEmployees.data);
+  const { teams } = useSelector((state) => state.team);
+  const { depts } = useSelector((state) => state.dept);
+  
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [sortOption, setSortOption] = useState("name-asc");
+  const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
+  const [employeeToAssign, setEmployeeToAssign] = useState(null);
 
   useEffect(() => {
     fetchEmployees();
@@ -56,7 +68,6 @@ export default function EmployeeManagementPage() {
     setSelectedEmployee(null);
     setEditMode(false);
     setModalOpen(true);
-  
   };
 
   const handleDelete = (employeeId) => {
@@ -64,27 +75,72 @@ export default function EmployeeManagementPage() {
     setEditMode(false);
     setModalOpen(false);
     dispatch(deleteEmployee(employeeId))
-    .unwrap()
-    .then(() => {
-      toast.success("Deleted Successfully")
-    })
-    .catch(error => {
-      toast.error("Failed to Delete")
-    });
-  }
+      .unwrap()
+      .then(() => {
+        toast.success("Deleted Successfully")
+      })
+      .catch(error => {
+        toast.error("Failed to Delete")
+      });
+  };
+
+  const handleAssignClick = (employee) => {
+    setEmployeeToAssign(employee);
+    setAssignmentModalOpen(true);
+  };
+
+  const handleAssignDepartment = async (employeeId, newDept) => {
+    try {
+      await dispatch(updateEmployeeDepartment({ employeeId, newDept })).unwrap();
+      toast.success("Department updated successfully");
+      fetchEmployees();
+    } catch (error) {
+      toast.error(error.message || "Failed to update department");
+    }
+  };
+
+  const handleAssignTeam = async (employeeId, newTeam) => {
+    try {
+      await dispatch(updateEmployeeTeam({ employeeId, newTeam })).unwrap();
+      toast.success("Team updated successfully");
+      fetchEmployees();
+    } catch (error) {
+      toast.error(error.message || "Failed to update team");
+    }
+  };
 
   const handleCloseProfile = () => {
     setSelectedEmployee(null);
   };
 
-  const filteredEmployees = employees?.filter(emp => 
+  const filteredEmployees = useMemo(() => {
+  return employees?.filter(emp => 
     `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     emp.position.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
+}, [employees, searchTerm]);
 
-  const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
-  const paginatedEmployees = filteredEmployees.slice(
+  const sortedEmployees = useMemo(() => {
+    if (!filteredEmployees) return [];
+    
+    const sorted = [...filteredEmployees];
+    console.log(sorted[1])
+    switch (sortOption) {
+      case "experience-desc":
+        return sorted.sort((a, b) => (a.hireDate ? new Date(a.hireDate).getTime() : 0) - (b.hireDate ? new Date(b.hireDate).getTime() : 0));
+      case "experience-asc":
+        return sorted.sort((a, b) => (b.hireDate ? new Date(b.hireDate).getTime() : 0) - (a.hireDate ? new Date(a.hireDate).getTime() : 0));
+      case "name-desc":
+        return sorted.sort((a, b) => b.firstName.localeCompare(a.firstName));
+      case "name-asc":
+      default:
+        return sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
+    }
+  }, [filteredEmployees, sortOption]);
+
+  const totalPages = Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE);
+  const paginatedEmployees = sortedEmployees.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -120,6 +176,22 @@ export default function EmployeeManagementPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FiFilter className="text-gray-400" />
+                </div>
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="pl-10 pr-4 py-2 rounded-full bg-base-100 border border-base-200 focus:ring-2 focus:ring-primary focus:border-transparent text-sm appearance-none"
+                >
+                  <option value="name-asc">Name (A-Z)</option>
+                  <option value="name-desc">Name (Z-A)</option>
+                  <option value="experience-desc">Most Experience</option>
+                  <option value="experience-asc">Least Experience</option>
+                </select>
               </div>
               
               <button
@@ -158,6 +230,7 @@ export default function EmployeeManagementPage() {
                 onView={handleViewProfile} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}
+                onAssign={handleAssignClick}
               />
             </div>
             
@@ -187,6 +260,17 @@ export default function EmployeeManagementPage() {
             setSelectedEmployee(null);
           }
         }}
+      />
+
+      {/* Assignment Modal */}
+      <AssignmentModal
+        isOpen={assignmentModalOpen}
+        onClose={() => setAssignmentModalOpen(false)}
+        employee={employeeToAssign}
+        departments={depts}
+        teams={teams}
+        onAssignDepartment={handleAssignDepartment}
+        onAssignTeam={handleAssignTeam}
       />
     </div>
   );

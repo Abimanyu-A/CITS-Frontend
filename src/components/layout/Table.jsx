@@ -1,7 +1,16 @@
 import { motion } from "framer-motion";
-import { FiUser, FiPhone, FiMail, FiBriefcase, FiDollarSign, FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
+import { 
+  FiUser, FiPhone, FiMail, FiBriefcase, FiDollarSign, 
+  FiEdit2, FiTrash2, FiEye, FiUsers 
+} from "react-icons/fi";
 
-export default function Table({ employees, onView, onEdit, onDelete }) {
+export default function Table({ 
+  employees, 
+  onView, 
+  onEdit, 
+  onDelete,
+  onAssign 
+}) {
   return (
     <div className="bg-base-100/50 rounded-xl overflow-hidden backdrop-blur-sm">
       {/* Mobile Cards View */}
@@ -79,6 +88,15 @@ export default function Table({ employees, onView, onEdit, onDelete }) {
                   title="Edit"
                 >
                   <FiEdit2 />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => onAssign(employee)}
+                  className="text-purple-400 hover:text-purple-600 p-1"
+                  title="Assign Dept/Team"
+                >
+                  <FiUsers />
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
@@ -176,6 +194,15 @@ export default function Table({ employees, onView, onEdit, onDelete }) {
                         title="Edit"
                       >
                         <FiEdit2 />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => onAssign(employee)}
+                        className="text-purple-400 hover:text-purple-600"
+                        title="Assign Dept/Team"
+                      >
+                        <FiUsers />
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.1 }}

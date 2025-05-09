@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiUsers, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import TeamListItem from "./TeamListItem";
 
-const TeamList = ({ teams, selectedTeam, onSelectTeam }) => {
+const TeamList = ({ teams, selectedTeam, onSelectTeam, onDelete, onEdit }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -29,6 +29,8 @@ const TeamList = ({ teams, selectedTeam, onSelectTeam }) => {
               team={team}
               isSelected={selectedTeam?._id === team._id}
               onSelect={onSelectTeam}
+              onEdit = {onEdit}
+              onDelete = {onDelete}
             />
           ))
         )}

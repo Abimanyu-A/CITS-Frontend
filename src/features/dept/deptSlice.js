@@ -45,10 +45,10 @@ const deptSlice = createSlice({
       .addCase(updateDept.fulfilled, (state, action) => {
         state.status = "succeeded";
         const index = state.depts.findIndex(
-          (dept) => dept._id === action.payload._id
+          (dept) => dept._id === action.payload.data._id
         );
         if (index !== -1) {
-          state.depts[index] = action.payload;
+          state.depts[index] = action.payload.data;
         }
       })
       .addCase(updateDept.rejected, (state, action) => {

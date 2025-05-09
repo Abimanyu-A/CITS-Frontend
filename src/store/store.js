@@ -3,6 +3,8 @@ import authReducer from "../features/auth/authSlice";
 import empReducer from "../features/emp/empSlice";
 import teamReducer from "../features/team/teamSlice"
 import deptReducer from "../features/dept/deptSlice"
+import reviewReducer from "../features/review/reviewSlice"
+import attendanceReducer from "../features/attendence/attendenceSlice"
 
 import {
   persistStore,
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
   emp: empReducer,
   team: teamReducer,
   dept: deptReducer,
+  review: reviewReducer,
+  attendance: attendanceReducer,
 });
 
 // Persist config

@@ -40,6 +40,7 @@ export const updateTeam = createAsyncThunk(
 export const createTeam = createAsyncThunk(
     "team/createTeam",
     async ({ team }, { rejectWithValue }) => {
+        console.log(team);
         try {
             const response = await api.post("/team/create", team, { withCredentials: true });
             return response.data;

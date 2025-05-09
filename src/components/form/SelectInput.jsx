@@ -28,7 +28,7 @@ const SelectInput = ({
           name={name}
           value={value}
           onChange={onChange}
-          className={`block w-full ${icon ? 'pl-10' : ''} pr-3 py-2 border ${error ? 'border-error' : 'border-base-300'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-base-200 appearance-none`}
+          className={`block w-full ${icon ? 'pl-10' : ''} pr-3 py-2 border ${error ? 'border-error' : 'border-base-300'} rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-base-200 appearance-none`}
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>

@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { FiUsers, FiX } from "react-icons/fi";
+import EmptyMembersState from "./EmptyMembersState";
+import { useSelector } from "react-redux";
+import MemberCard from "./MemberCard"; // Ensure this is imported
 
 const TeamDetails = ({ team, onClose }) => {
+  const allEmployees = useSelector((state) => state.emp.allEmployees.data);
+
   if (!team) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
@@ -13,6 +18,10 @@ const TeamDetails = ({ team, onClose }) => {
       </div>
     );
   }
+
+  const members = allEmployees.filter(
+    (employee) => employee.teamId === team._id
+  );
 
   return (
     <motion.div
@@ -41,9 +50,9 @@ const TeamDetails = ({ team, onClose }) => {
           <FiUsers className="text-primary" /> Team Members
         </h3>
 
-        {team.members && team.members.length > 0 ? (
+        {members.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {team.members.map((member) => (
+            {members.map((member) => (
               <MemberCard key={member._id} member={member} />
             ))}
           </div>
