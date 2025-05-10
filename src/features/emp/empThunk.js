@@ -85,7 +85,7 @@ export const updateEmployeeDepartment = createAsyncThunk(
   async ({ employeeId, newDept }, { rejectWithValue }) => {
     try {
       const response = await api.put(
-        `/emp/update-dept/${employeeId}`,
+        `/emp/dept-details/${employeeId}`,
         { newDept },
         { withCredentials: true }
       );
@@ -101,7 +101,7 @@ export const updateEmployeeTeam = createAsyncThunk(
   async ({ employeeId, newTeam }, { rejectWithValue }) => {
     try {
       const response = await api.put(
-        `/emp/update-team/${employeeId}`,
+        `/emp/dept-teams/${employeeId}`,
         { newTeam },
         { withCredentials: true }
       );

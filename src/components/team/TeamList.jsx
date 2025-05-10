@@ -1,9 +1,8 @@
-// components/team/TeamList.jsx
 import { motion, AnimatePresence } from "framer-motion";
 import { FiUsers, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import TeamListItem from "./TeamListItem";
 
-const TeamList = ({ teams, selectedTeam, onSelectTeam, onDelete, onEdit }) => {
+const TeamList = ({ teams, selectedTeam, onSelectTeam, onDelete, onEdit, onAssign }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -31,6 +30,7 @@ const TeamList = ({ teams, selectedTeam, onSelectTeam, onDelete, onEdit }) => {
               onSelect={onSelectTeam}
               onEdit = {onEdit}
               onDelete = {onDelete}
+              onAssign={onAssign}
             />
           ))
         )}

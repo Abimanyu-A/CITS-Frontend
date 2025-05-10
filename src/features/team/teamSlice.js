@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteTeam, updateTeam, getAllTeams } from "./teamThunk";
+import { deleteTeam, updateTeam, getAllTeams, assignTeamToDept } from "./teamThunk";
 
 const teamSlice = createSlice({
     name: "team",
@@ -40,6 +40,12 @@ const teamSlice = createSlice({
             const updatedTeam = action.payload;
             state.teams = state.teams.map(team => 
                 team._id === updatedTeam._id ? updateTeam : team
+            );
+        })
+        .addCase(assignTeamToDept.fulfilled, (state, action) => {
+            const updatedTeam = action.payload;
+            state.teams = state.teams.map(team => 
+                team._id === updatedTeam._id ? updatedTeam : team
             );
         });
     }

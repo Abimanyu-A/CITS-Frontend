@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { FiUser } from "react-icons/fi";
 
 const MemberCard = ({ member }) => {
+  console.log(member)
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -9,7 +10,7 @@ const MemberCard = ({ member }) => {
     >
       <div className="avatar placeholder">
         <div className="bg-primary/20 text-primary rounded-full w-12 h-12 flex items-center justify-center">
-          {member.firstName?.charAt(0)}{member.lastName?.charAt(0) || <FiUser />}
+          <img src={member.photo} alt="" />
         </div>
       </div>
       <div>

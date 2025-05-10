@@ -6,19 +6,14 @@ export default function AssignmentModal({
   isOpen,
   onClose,
   employee,
-  departments,
   teams,
-  onAssignDepartment,
   onAssignTeam
 }) {
-  const [selectedDept, setSelectedDept] = useState(employee?.departmentId?._id || '');
+
   const [selectedTeam, setSelectedTeam] = useState(employee?.teamId?._id || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selectedDept && selectedDept !== employee?.departmentId?._id) {
-      onAssignDepartment(employee._id, selectedDept);
-    }
     if (selectedTeam && selectedTeam !== employee?.teamId?._id) {
       onAssignTeam(employee._id, selectedTeam);
     }
@@ -40,7 +35,7 @@ export default function AssignmentModal({
       >
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold">Assign Department/Team</h3>
+            <h3 className="text-lg font-bold">Assign Team</h3>
             <button onClick={onClose} className="text-gray-400 hover:text-white">
               <FiX size={24} />
             </button>
@@ -48,23 +43,6 @@ export default function AssignmentModal({
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Department
-                </label>
-                <select
-                  value={selectedDept}
-                  onChange={(e) => setSelectedDept(e.target.value)}
-                  className="w-full bg-base-200 border border-base-300 rounded-md px-3 py-2 text-sm"
-                >
-                  <option value="">Select Department</option>
-                  {departments.map((dept) => (
-                    <option key={dept._id} value={dept._id}>
-                      {dept.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -78,7 +56,7 @@ export default function AssignmentModal({
                   <option value="">Select Team</option>
                   {teams.map((team) => (
                     <option key={team._id} value={team._id}>
-                      {team.name}
+                      {team.teamName}
                     </option>
                   ))}
                 </select>

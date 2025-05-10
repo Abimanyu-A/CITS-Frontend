@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../utils/api";                                              
+import api from "../../utils/api";
 
+// Department CRUD operations
 export const getAllDepts = createAsyncThunk(
   "dept/getAllDepts",
   async (_, { rejectWithValue }) => {
@@ -45,6 +46,31 @@ export const deleteDept = createAsyncThunk(
   async (deleteData, { rejectWithValue }) => {
     try {
       const response = await api.delete(`/dept/delete_dept/${deleteData.deptId}`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+// Version control operations
+export const getDeptVersions = createAsyncThunk(
+  "dept/getVersions",
+  async (deptId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/dept/${deptId}/versions`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+export const revertDeptVersion = createAsyncThunk(
+  "dept/revertVersion",
+  async ({ deptId, versionId }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/dept/${deptId}/revert/${versionId}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

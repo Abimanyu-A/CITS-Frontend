@@ -1,7 +1,7 @@
 import Button from "../element/Button";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiLink2 } from "react-icons/fi";
 
-const TeamActions = ({ team, onEdit, onDelete }) => {
+const TeamActions = ({ team, onEdit, onDelete, onAssign }) => {
   return (
     <div className="flex gap-2 justify-end">
       <Button
@@ -25,6 +25,14 @@ const TeamActions = ({ team, onEdit, onDelete }) => {
         size="sm"
       >
         Delete
+      </Button>
+      <Button 
+        onClick={() => onAssign(team)}
+        icon = {<FiLink2 className="w-3 h-3"/>}
+        variant="primary"
+        size="sm"
+      >
+        Assign
       </Button>
     </div>
   );

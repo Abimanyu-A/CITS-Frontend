@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { getAllTeams, deleteTeam, createTeam, updateTeam } from "../../features/team/teamThunk";
+import { getAllTeams, deleteTeam, createTeam, updateTeam, assignTeamToDept } from "../../features/team/teamThunk";
 import { resetTeams } from "../../features/team/teamSlice";
 import TeamList from "../../components/team/TeamList";
 import TeamDetails from "../../components/team/TeamDetails";
@@ -10,7 +10,9 @@ import Modal from "../../components/modal/Modal";
 import TeamForm from "../../components/team/TeamForm";
 import Button from "../../components/element/Button";
 import LoadingPage from "../../components/layout/LoadingPage";
+import AssignTeamToDept from "../../components/team/AssignTeamToDept";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { resetDepts } from "../../features/dept/deptSlice";
 
 const TeamManagementPage = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,8 @@ const TeamManagementPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [teamToDelete, setTeamToDelete] = useState(null);
   const [teamToEdit, setTeamToEdit] = useState(null);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [teamToAssign, setTeamToAssign] = useState(null);
   const [newTeam, setNewTeam] = useState({
     teamName: '',
     description: '',
@@ -53,7 +57,7 @@ const TeamManagementPage = () => {
     let valid = true;
     const newErrors = { name: '', description: '', teamLead: '', department: '' };
   
-    if (!teamData.name.trim()) {
+    if (!teamData.teamName.trim()) {
       newErrors.name = 'Team name is required';
       valid = false;
     }
@@ -68,7 +72,7 @@ const TeamManagementPage = () => {
       valid = false;
     }
   
-    if (!teamData.department) {
+    if (!teamData.dept) {
       newErrors.department = 'Department is required';
       valid = false;
     }
@@ -90,12 +94,29 @@ const TeamManagementPage = () => {
       toast.error(error.message || 'Failed to create team');
     }
   };
+
+  const handleAssignToDept = async (deptId) => {
+    try {
+      await dispatch(assignTeamToDept({ 
+        teamId: teamToAssign._id, 
+        deptId 
+      })).unwrap();
+      toast.success('Team assigned to department successfully!');
+      setIsAssignModalOpen(false);
+      setTeamToAssign(null);
+      dispatch(resetTeams());
+      dispatch(resetDepts());
+    } catch (error) {
+      toast.error(error.message || 'Failed to assign team to department');
+    }
+  };
   
   const handleUpdateTeam = async (e, formData) => {
     e.preventDefault();
     if (!validateForm(formData)) return;
   
     try {
+      dispatch(resetTeams());
       await dispatch(updateTeam({ 
         teamId: teamToEdit._id, 
         updates: formData
@@ -178,6 +199,10 @@ const TeamManagementPage = () => {
             onSelectTeam={setSelectedTeam}
             onEdit={openEditModal}
             onDelete={openDeleteModal}
+            onAssign={(team) => {
+              setTeamToAssign(team);
+              setIsAssignModalOpen(true);
+            }}
           />
           
           <TeamDetails
@@ -246,6 +271,19 @@ const TeamManagementPage = () => {
             </Button>
           </div>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+        title={`Assign Team to Department`}
+      >
+        <AssignTeamToDept
+          team={teamToAssign}
+          departments={departments}
+          onAssign={handleAssignToDept}
+          onClose={() => setIsAssignModalOpen(false)}
+        />
       </Modal>
     </div>
   );

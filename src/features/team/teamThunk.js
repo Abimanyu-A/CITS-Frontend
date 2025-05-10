@@ -49,3 +49,15 @@ export const createTeam = createAsyncThunk(
         }
     }
 );
+
+export const assignTeamToDept = createAsyncThunk(
+  'team/assignToDept',
+  async ({ teamId, deptId }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(`/team/${teamId}/assign-dept`, { deptId });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);

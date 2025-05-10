@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 export default function ProtectedRoute() {
   const { user, firstLogin } = useSelector((state) => state.auth);
@@ -17,7 +18,7 @@ export default function ProtectedRoute() {
   }
 
   if (!employee) {
-    return <div>Loading employee data...</div>;
+    return <LoadingPage />;
   }
 
   return <Outlet />;

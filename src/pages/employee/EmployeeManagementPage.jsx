@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { 
   getAllEmployees, 
   deleteEmployee,
-  updateEmployeeDepartment,
   updateEmployeeTeam
 } from "../../features/emp/empThunk";
 
@@ -27,7 +26,6 @@ export default function EmployeeManagementPage() {
   const { status } = useSelector((state) => state.emp);
   const employees = useSelector((state) => state.emp.allEmployees.data);
   const { teams } = useSelector((state) => state.team);
-  const { depts } = useSelector((state) => state.dept);
   
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,15 +87,6 @@ export default function EmployeeManagementPage() {
     setAssignmentModalOpen(true);
   };
 
-  const handleAssignDepartment = async (employeeId, newDept) => {
-    try {
-      await dispatch(updateEmployeeDepartment({ employeeId, newDept })).unwrap();
-      toast.success("Department updated successfully");
-      fetchEmployees();
-    } catch (error) {
-      toast.error(error.message || "Failed to update department");
-    }
-  };
 
   const handleAssignTeam = async (employeeId, newTeam) => {
     try {
@@ -267,9 +256,7 @@ export default function EmployeeManagementPage() {
         isOpen={assignmentModalOpen}
         onClose={() => setAssignmentModalOpen(false)}
         employee={employeeToAssign}
-        departments={depts}
         teams={teams}
-        onAssignDepartment={handleAssignDepartment}
         onAssignTeam={handleAssignTeam}
       />
     </div>

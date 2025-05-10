@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import TeamActions from "./TeamActions";
 
-const TeamListItem = ({ team, isSelected, onSelect, onEdit, onDelete }) => {
+const TeamListItem = ({ team, isSelected, onSelect, onEdit, onDelete, onAssign }) => {
   return (
     <motion.div
       whileHover={{ backgroundColor: 'rgba(30, 41, 59, 0.5)' }}
@@ -30,7 +30,7 @@ const TeamListItem = ({ team, isSelected, onSelect, onEdit, onDelete }) => {
             transition={{ duration: 0.2 }}
             className="mt-3 pt-3 border-t border-base-300"
           >
-            <TeamActions team={team} onEdit={onEdit} onDelete={onDelete} />
+            <TeamActions team={team} onEdit={onEdit} onDelete={onDelete} onAssign={onAssign} />
           </motion.div>
         )}
       </AnimatePresence>

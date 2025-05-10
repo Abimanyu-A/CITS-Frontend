@@ -42,6 +42,7 @@ const DeptManagementPage = () => {
   useEffect(() => {
     if (error) {
       toast.dismiss();
+      console.log(error)
       toast.error(error);
     }
   }, [error]);
