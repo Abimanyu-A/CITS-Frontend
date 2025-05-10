@@ -38,9 +38,9 @@ const TeamForm = ({
       <div className="space-y-4">
         <TextInput
           label="Team Name"
-          name="name"
+          name="teamName"
           value={formData.teamName}
-          onChange={(e) => handleChange('name', e.target.value)}
+          onChange={(e) => handleChange('teamName', e.target.value)}
           error={errors.name}
           required
           icon={<FiUsers className="text-gray-400" />}
