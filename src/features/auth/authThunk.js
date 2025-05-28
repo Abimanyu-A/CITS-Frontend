@@ -3,8 +3,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getCurrentEmployee } from "../emp/empThunk.js";
 
 
-const handleError = (error) =>
-  error?.response?.data?.message || error.message || "Something went wrong";
+export const handleError = (error) => {
+  if (error.response) {
+    if (error.response.status === 401) {
+      return "Invalid credentials";
+    }
+    return error.response.data?.message || "An error occurred";
+  }
+  return "Network error";
+};
+
 
 // Thunk to get current user
 export const getCurrentUser = createAsyncThunk(

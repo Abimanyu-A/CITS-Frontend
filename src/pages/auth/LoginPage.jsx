@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FiLock, FiUser, FiLogIn } from "react-icons/fi"; // Switched from FiMail to FiUser
+import { FiLock, FiUser, FiLogIn } from "react-icons/fi"; 
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/auth/authThunk";
 import { useState, useEffect } from "react";
@@ -137,16 +137,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="mt-4">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/register")}
-              className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-primary rounded-full shadow-sm text-sm font-medium text-primary bg-transparent hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              Create an account
-            </motion.button>
-          </div>
         </div>
       </motion.div>
     </div>
